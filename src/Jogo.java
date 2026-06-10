@@ -2,41 +2,38 @@ import java.util.Scanner;
 
 public class Jogo {
     public void iniciar(Scanner s) {
-        int opcao = 0, pontos = 0, tentativas = 8, tesourosencontrados = 0, armadilhasencontrados = 0, vaziosencontrados = 0, pontuação = 0;
-
+        int opcao = 0, pontos = 0, tentativas = 8, tesourosencontrados = 0, armadilhasencontrados = 0,
+                vaziosencontrados = 0, pontuação = 0;
         String tesouros[] = new String[15];
         sortear(tesouros);
-
         String mapa[] = new String[tesouros.length];
         for (int i = 0; i < mapa.length; i++) {
             mapa[i] = "?";
         }
-
         do {
-            System.out.print("\n===== ILHA DOS TESOUROS =====\n" +
-                    "1 - Mostrar instruções\n" +
-                    "2 - Mostrar mapa\n" +
-                    "3 - Jogar\n" +
-                    "4 - Mostrar status\n" +
-                    "5 - Sair\n" +
-                    "Escolha uma opção:");
+            if (tentativas > 0) {
+                System.out.print("\n===== ILHA DOS TESOUROS =====\n" +
+                        "1 - Mostrar instruções\n" +
+                        "2 - Mostrar mapa\n" +
+                        "3 - Jogar\n" +
+                        "4 - Mostrar status\n" +
+                        "5 - Sair\n" +
+                        "Escolha uma opção:");
+                opcao = s.nextInt();
+                System.out.println();
 
-            opcao = s.nextInt();
-            System.out.println();
+                switch (opcao) {
+                    case 1:
+                        mostrarinstrucoes();
 
-            switch (opcao) {
-                case 1:
-                    mostrarinstrucoes();
+                        break;
 
-                    break;
+                    case 2:
+                        mostrarmapa(mapa);
 
-                case 2:
-                    mostrarmapa(mapa);
+                        break;
 
-                    break;
-
-                case 3:
-                    if (tentativas > 0) {
+                    case 3:
                         pontos = jogar(tesouros, mapa, s);
                         if (pontos < 0) {
                             armadilhasencontrados++;
@@ -47,28 +44,44 @@ public class Jogo {
                         }
                         pontuação += pontos;
                         tentativas--;
+                        System.out.println("Jogadas restantes: " + tentativas);
+                        break;
+
+                    case 4:
+                    case 5:
+                        mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação, opcao);
+
+                        break;
+
+                    default:
+                        System.out.println("Opção Inválida!");
+                        break;
+                }
+            } else {
+                mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação, opcao);
+                if (pontuação < 1) {
+                    System.out.println("Você perdeu!");
+                } else {
+                    System.out.println("Você Venceu!");
+                }
+                String jogarnovamente = "";
+                do {
+                    System.out.println("Deseja jogar novamente? (S/N): ");
+                    jogarnovamente = s.next().toUpperCase();
+                    if (jogarnovamente.equals("S")) {
+                        System.out.println("Reiniciando o jogo...");
+                    } else {
+                        opcao = 5;
+                    System.out.println("Obrigado por jogar!");
                     }
-                    
-                    break;
-
-                case 4:
-                    mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação);
-
-                    break;
-
-                case 5:
-                    System.out.println("Jogo encerrado!");
-                    break;
-
-                default:
-                    System.out.println("Opção Inválida!");
-                    break;
+                } while(jogarnovamente.equals("N")); // arrumar
+                
             }
         } while (opcao != 5);
     }
 
     private void mostrarinstrucoes() {
-        System.out.println("Como escolher uma opção?\n" +
+        System.out.println("Como escolher uma posição?\n" +
                 "Ao escolher a opção jogar, digite um número de 1 a 15 para tentar encontrar os tesouros escondidos.\n"
                 +
                 "\nQuais são os tipos de tesouros?\n" +
@@ -110,67 +123,75 @@ public class Jogo {
     }
 
     private int jogar(String tesouros[], String mapa[], Scanner s) {
-        int pontos = 0;
-        int posicao = 0;
+        int pontos = 0, posicao = 0;
         do {
             System.out.print("Digite uma posição para ser explorada: ");
-            posicao = s.nextInt() - 1;
-            if (posicao > 0) {
-                
+            posicao = s.nextInt();
+            while (posicao > 15 || posicao < 1) {
+                System.out.println("Posição inválida! Digite novamente.");
+                System.out.print("Digite uma posição para ser explorada: ");
+                posicao = s.nextInt();
             }
+            posicao--;
             if (mapa[posicao].equals("?")) {
                 switch (tesouros[posicao]) {
                     case "VAZIO":
                         pontos = 0;
-                        System.out.println("Você encontrou VAZIO! +0 pontos.");
+                        System.out.println("\nVocê encontrou VAZIO! +0 pontos.");
                         break;
-            
+
                     case "OURO":
                         pontos = 10;
-                        System.out.println("Você encontrou OURO! +10 pontos.");
+                        System.out.println("\nVocê encontrou OURO! +10 pontos.");
                         break;
 
                     case "DIAMANTE":
                         pontos = 20;
-                        System.out.println("Você encontrou DIAMANTE! +20 pontos.");
+                        System.out.println("\nVocê encontrou DIAMANTE! +20 pontos.");
                         break;
 
                     case "RUBI":
                         pontos = 15;
-                        System.out.println("Você encontrou RUBI! +15 pontos.");
+                        System.out.println("\nVocê encontrou RUBI! +15 pontos.");
                         break;
 
                     case "BURACO":
                         pontos = -5;
-                        System.out.println("Você encontrou uma armadilha: BURACO! -5 pontos.");
+                        System.out.println("\nVocê encontrou uma armadilha: BURACO! -5 pontos.");
                         break;
 
                     case "COBRA":
                         pontos = -10;
-                        System.out.println("Você encontrou uma armadilha: COBRA! -10 pontos.");
+                        System.out.println("\nVocê encontrou uma armadilha: COBRA! -10 pontos.");
                         break;
 
                     case "ESPINHOS":
                         pontos = -7;
-                        System.out.println("Você encontrou uma armadilha: ESPINHOS! -7 pontos.");
+                        System.out.println("\nVocê encontrou uma armadilha: ESPINHOS! -7 pontos.");
                         break;
-        
+
                     default:
                         break;
                 }
-            } else if (mapa[posicao].equals("EXPLORADO")){
+            } else {
                 System.out.println("\nEssa posição já foi explorada! Escolha outra.");
-            } System.out.println("Posição inválida! Digite novamente.");
-        } while(mapa[posicao].equals("EXPLORADO"));
+            }
+        } while (mapa[posicao].equals("EXPLORADO"));
         mapa[posicao] = "EXPLORADO";
         return pontos;
     }
-    private void mostrarstatus(int tentativas, int tesourosencontrados, int armadilhasencontrados, int vaziosencontrados,int pontuação) {
-        System.out.print("Status atual:\n" + //
-                        "Pontuação: " + pontuação + " pontos\n" + 
-                        "Tentativas restantes: " + tentativas + "\n" + 
-                        "Tesouros encontrados: " + tesourosencontrados + "\n" + 
-                        "Armadilhas encontradas: " + armadilhasencontrados + "\n" + 
-                        "Posições vazias exploradas: " + vaziosencontrados + "\n");
+
+    private void mostrarstatus(int tentativas, int tesourosencontrados, int armadilhasencontrados,
+            int vaziosencontrados, int pontuação, int opcao) {
+        if (opcao == 5 || tentativas < 0) {
+            System.out.print("Resultado final:\n");
+        } else {
+            System.out.print("Status atual:\n");
+        }
+        System.out.print("Pontuação: " + pontuação + " pontos\n" +
+                "Tentativas restantes: " + tentativas + "\n" +
+                "Tesouros encontrados: " + tesourosencontrados + "\n" +
+                "Armadilhas encontradas: " + armadilhasencontrados + "\n" +
+                "Posições vazias exploradas: " + vaziosencontrados + "\n");
     }
 }
