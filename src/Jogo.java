@@ -60,22 +60,12 @@ public class Jogo {
             } else {
                 mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação, opcao);
                 if (pontuação < 1) {
-                    System.out.println("Você perdeu!");
+                    System.out.println("\nVocê perdeu!");
+                    break;
                 } else {
-                    System.out.println("Você Venceu!");
+                    System.out.println("\nVocê Venceu!");
+                    break;
                 }
-                String jogarnovamente = "";
-                do {
-                    System.out.println("Deseja jogar novamente? (S/N): ");
-                    jogarnovamente = s.next().toUpperCase();
-                    if (jogarnovamente.equals("S")) {
-                        System.out.println("Reiniciando o jogo...");
-                    } else {
-                        opcao = 5;
-                    System.out.println("Obrigado por jogar!");
-                    }
-                } while(jogarnovamente.equals("N")); // arrumar
-                
             }
         } while (opcao != 5);
     }
@@ -183,10 +173,10 @@ public class Jogo {
 
     private void mostrarstatus(int tentativas, int tesourosencontrados, int armadilhasencontrados,
             int vaziosencontrados, int pontuação, int opcao) {
-        if (opcao == 5 || tentativas < 0) {
-            System.out.print("Resultado final:\n");
+        if (opcao == 5 || tentativas < 1) {
+            System.out.print("\nStatus final:\n");
         } else {
-            System.out.print("Status atual:\n");
+            System.out.print("\nStatus atual:\n");
         }
         System.out.print("Pontuação: " + pontuação + " pontos\n" +
                 "Tentativas restantes: " + tentativas + "\n" +
