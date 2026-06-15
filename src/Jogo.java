@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Jogo {
     public void iniciar(Scanner s) {
         int opcao = 0, pontos = 0, tentativas = 8, tesourosencontrados = 0, armadilhasencontrados = 0,
-                vaziosencontrados = 0, pontuação = 0;
+                vaziosencontrados = 0, pontuacao = 0;
         String tesouros[] = new String[15];
         sortear(tesouros);
         String mapa[] = new String[tesouros.length];
@@ -42,14 +42,14 @@ public class Jogo {
                         } else if (pontos > 0) {
                             tesourosencontrados++;
                         }
-                        pontuação += pontos;
+                        pontuacao += pontos;
                         tentativas--;
                         System.out.println("Jogadas restantes: " + tentativas);
                         break;
 
                     case 4:
                     case 5:
-                        mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação, opcao);
+                        mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuacao, opcao);
 
                         break;
 
@@ -58,8 +58,8 @@ public class Jogo {
                         break;
                 }
             } else {
-                mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuação, opcao);
-                if (pontuação < 1) {
+                mostrarstatus(tentativas, tesourosencontrados, armadilhasencontrados, vaziosencontrados, pontuacao, opcao);
+                if (pontuacao < 1) {
                     System.out.println("\nVocê perdeu!");
                     break;
                 } else {
@@ -172,13 +172,13 @@ public class Jogo {
     }
 
     private void mostrarstatus(int tentativas, int tesourosencontrados, int armadilhasencontrados,
-            int vaziosencontrados, int pontuação, int opcao) {
+            int vaziosencontrados, int pontuacao, int opcao) {
         if (opcao == 5 || tentativas < 1) {
             System.out.print("\nStatus final:\n");
         } else {
             System.out.print("\nStatus atual:\n");
         }
-        System.out.print("Pontuação: " + pontuação + " pontos\n" +
+        System.out.print("Pontuação: " + pontuacao + " pontos\n" +
                 "Tentativas restantes: " + tentativas + "\n" +
                 "Tesouros encontrados: " + tesourosencontrados + "\n" +
                 "Armadilhas encontradas: " + armadilhasencontrados + "\n" +
